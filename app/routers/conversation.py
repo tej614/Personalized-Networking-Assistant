@@ -8,3 +8,8 @@ from app.services.history_logger import save_history
 from app.services.feedback_logger import save_feedback
 
 router=APIRouter()
+
+@router.post("/generate",response_model=ConversationResponse)
+def generate_conversation(request:ConversationRequest):
+    event_info=analyze_event(request.event)
+    topics=generate_topics(request.event)
