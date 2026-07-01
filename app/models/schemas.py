@@ -19,3 +19,6 @@ class ConversationResponse(BaseModel):
     suggested_topics:List[str]
     networking_tips:List[str]
     fact_check_status:str
+class Feedback(BaseModel):
+    rating:int
+    comments:str
