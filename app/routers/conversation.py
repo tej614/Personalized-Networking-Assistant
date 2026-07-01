@@ -13,3 +13,21 @@ router=APIRouter()
 def generate_conversation(request:ConversationRequest):
     event_info=analyze_event(request.event)
     topics=generate_topics(request.event)
+    verified=check_facts(topics)
+
+    save_history(
+        request.user.name,
+        request.event.title,
+        topics
+    )
+
+    return ConversationResponse(
+        suggested_topics=verified["verified_topics"],
+        networking_tips=[
+            "Introduce yourself confidently.",
+            "Ask open ended questions.",
+            "Exchange contact information.",
+        ],
+        fact_check_status=verified["status"]
+    )
+
