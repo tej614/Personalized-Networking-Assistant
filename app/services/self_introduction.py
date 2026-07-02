@@ -30,4 +30,7 @@ Rules:
         ]
     )
 
-    return response.choices[0].message.content.strip()
+    intro = response.choices[0].message.content.strip()
+    intro = intro.strip('"')
+
+    return intro
