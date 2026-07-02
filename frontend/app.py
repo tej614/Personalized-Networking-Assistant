@@ -32,4 +32,19 @@ if generate:
         json=data
     )
 
-    st.write(response.json())
+    if response.status_code ==200:
+        result=response.json()
+
+        st.subheader("Suggested Topics")
+        for topic in result["suggested_topics"]:
+            st.write("•", topic)
+        st.subheader("🤝 Networking Tips")
+        
+        for tip in result["networking_tips"]:
+            st.write("•", tip)
+
+        st.subheader("Fact Check Status")
+
+        st.success(result["fact_check_status"])
+    else:
+        st.error("Failed to connect to the FastAPI backend.")
