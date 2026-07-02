@@ -55,6 +55,12 @@ if generate:
 
         st.markdown("## ✅ Fact Check Status")
         st.success(result["fact_check_status"])
+        st.markdown("## 📜 Recent History")
+
+        for item in result["history"]:
+            st.write(
+                f"👤 {item[0]} | 📅 {item[3]} | 🎯 {item[1]}"
+            )
 
     else:
         st.error("Failed to connect to the FastAPI backend.")
