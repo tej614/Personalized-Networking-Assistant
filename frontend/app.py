@@ -39,9 +39,15 @@ if generate:
         for topic in result["suggested_topics"]:
             st.write("•", topic)
         st.subheader("🤝 Networking Tips")
-        
+
         for tip in result["networking_tips"]:
             st.write("•", tip)
+
+        st.subheader("👤 AI Self Introduction")
+        st.info(result["self_introduction"])
+
+        st.subheader("Fact Check Status")
+        st.success(result["fact_check_status"])
 
         st.subheader("Fact Check Status")
 
