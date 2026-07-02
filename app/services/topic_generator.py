@@ -13,7 +13,16 @@ def generate_topics(event:Event):
         messages=[
             {
                 "role":"user",
-                "content": f"Generate 3 networking conversation topics for an event in {event.domain}. Return each topic on a new line."
+                "content": f"""
+                Generate exactly 3 short networking topics for an event about {event.domain}.
+
+                Rules:
+                -Each topic should be less then 6 words.
+                -Do not ask questions.
+                -Do not add numbering.
+                -Do not add explanations.
+                -Return one topic per line.
+                """
             }
         ]
     )
