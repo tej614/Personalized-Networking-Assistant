@@ -51,7 +51,7 @@ if generate:
     with st.spinner("🤖 AI is generating your networking assistant..."):
 
         response = requests.post(
-            "http://127.0.0.1:8000/generate",
+            "https://personalized-networking-assistant-9p63.onrender.com/generate",
             json=data
         )
 
