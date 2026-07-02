@@ -304,10 +304,6 @@ This project was developed collaboratively by:
 | **Chandana Ganuga** | Documentation, testing support, and project assistance |
 
 
-GitHub:
-
-https://github.com/tej614
-
 ---
 
 # 📄 License
