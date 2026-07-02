@@ -17,4 +17,8 @@ def generate_topics(event:Event):
             }
         ]
     )
-    print(response)
+    content=response.choices[0].message.content
+    
+    topics=content.split("\n")
+
+    return topics
