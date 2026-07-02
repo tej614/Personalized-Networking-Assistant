@@ -1,66 +1,97 @@
 import streamlit as st
 import requests
-st.set_page_config(page_title="Personalized Networking Assistant")
+
+st.set_page_config(
+    page_title="Personalized Networking Assistant",
+    page_icon="🤖",
+    layout="wide"
+)
+
 st.title("🤖 Personalized Networking Assistant")
-st.caption("AI-powered networking companion for conferences, seminars, and professional events.")
+st.caption("AI-powered networking companion for conferences, seminars, workshops, and professional events.")
+st.divider()
 
-name=st.text_input("Name")
-profession=st.text_input("Profession")
-interests=st.text_input("Interests (comma separated)")
+# =======================
+# Sidebar
+# =======================
+with st.sidebar:
+    st.header("👤 User Details")
 
-event_title=st.text_input("Event Title")
-domain=st.text_input("Domain")
-location=st.text_input("Location")
+    name = st.text_input("Name")
+    profession = st.text_input("Profession")
+    interests = st.text_input("Interests (comma separated)")
 
-generate=st.button("Generate")
+    st.header("📅 Event Details")
+
+    event_title = st.text_input("Event Title")
+    domain = st.text_input("Domain")
+    location = st.text_input("Location")
+
+    generate = st.button("🚀 Generate Networking Plan")
+
+# =======================
+# Generate Response
+# =======================
 
 if generate:
-    data={
-        "user":{
-            "name":name,
-            "profession":profession,
-            "interests":interests.split(",")
+
+    data = {
+        "user": {
+            "name": name,
+            "profession": profession,
+            "interests": [i.strip() for i in interests.split(",") if i.strip()]
         },
-        "event":{
-            "title":event_title,
-            "domain":domain,
-            "location":location
+        "event": {
+            "title": event_title,
+            "domain": domain,
+            "location": location
         }
     }
 
     with st.spinner("🤖 AI is generating your networking assistant..."):
+
         response = requests.post(
             "http://127.0.0.1:8000/generate",
             json=data
         )
 
-    if response.status_code ==200:
-        result=response.json()
+    if response.status_code == 200:
 
-        st.markdown("## 🎯 Suggested Topics")
-        for topic in result["suggested_topics"]:
-            st.write("•", topic)
-        st.markdown("## 🤝 Networking Tips")
+        result = response.json()
 
-        for tip in result["networking_tips"]:
-            st.write("•", tip)
+        col1, col2, col3 = st.columns(3)
 
-        st.markdown("## 👤 AI Self Introduction")
-        st.info(result["self_introduction"])
-        st.markdown("## 💬 Conversation Starters")
+        col1.metric("Topics", len(result["suggested_topics"]))
+        col2.metric("Tips", len(result["networking_tips"]))
+        col3.metric("Starters", len(result["conversation_starters"]))
 
-        for starter in result["conversation_starters"]:
-            st.write("•", starter)
+        st.divider()
 
+        with st.expander("🎯 Suggested Topics", expanded=True):
+            for topic in result["suggested_topics"]:
+                st.write("•", topic)
 
-        st.markdown("## ✅ Fact Check Status")
-        st.success(result["fact_check_status"])
-        st.markdown("## 📜 Recent History")
+        with st.expander("🤝 Networking Tips"):
+            for tip in result["networking_tips"]:
+                st.write("•", tip)
 
-        for item in result["history"]:
-            st.write(
-                f"👤 {item[0]} | 📅 {item[3]} | 🎯 {item[1]}"
-            )
+        with st.expander("👤 AI Self Introduction"):
+            st.info(result["self_introduction"])
+
+        with st.expander("💬 Conversation Starters"):
+            for starter in result["conversation_starters"]:
+                st.write("•", starter)
+
+        with st.expander("📜 Recent History"):
+            for item in result["history"]:
+                st.write(
+                    f"👤 **{item[0]}** | 🎯 **{item[1]}** | 📅 {item[3]}"
+                )
+
+        st.success(f"✅ Fact Check Status: {result['fact_check_status']}")
 
     else:
-        st.error("Failed to connect to the FastAPI backend.")
+        st.error("❌ Failed to connect to the FastAPI backend.")
+
+st.divider()
+st.caption("Built with ❤️ using FastAPI • Streamlit • Groq AI • SQLite")
