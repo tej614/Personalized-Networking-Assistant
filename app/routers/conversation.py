@@ -4,7 +4,7 @@ from app.models.schemas import ConversationRequest, ConversationResponse
 from app.services.event_analyzer import analyze_event
 from app.services.topic_generator import generate_topics
 from app.services.fact_checker import check_facts
-from app.services.history_logger import save_history
+from app.services.history_logger import save_history,get_history
 from app.services.feedback_logger import save_feedback
 from app.services.networking_tips import generate_networking_tips
 from app.services.self_introduction import generate_self_introduction
@@ -26,6 +26,7 @@ def generate_conversation(request:ConversationRequest):
         request.event.title,
         topics
     )
+    history = get_history()
 
     save_feedback(
         request.user.name,
