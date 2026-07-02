@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 st.set_page_config(page_title="Personalized Networking Assistant")
 st.title("🤖 Personalized Networking Assistant")
+st.caption("AI-powered networking companion for conferences, seminars, and professional events.")
 
 name=st.text_input("Name")
 profession=st.text_input("Profession")
@@ -36,23 +37,23 @@ if generate:
     if response.status_code ==200:
         result=response.json()
 
-        st.subheader("Suggested Topics")
+        st.markdown("## 🎯 Suggested Topics")
         for topic in result["suggested_topics"]:
             st.write("•", topic)
-        st.subheader("🤝 Networking Tips")
+        st.markdown("## 🤝 Networking Tips")
 
         for tip in result["networking_tips"]:
             st.write("•", tip)
 
-        st.subheader("👤 AI Self Introduction")
+        st.markdown("## 👤 AI Self Introduction")
         st.info(result["self_introduction"])
-        st.subheader("💬 Conversation Starters")
+        st.markdown("## 💬 Conversation Starters")
 
         for starter in result["conversation_starters"]:
             st.write("•", starter)
 
 
-        st.subheader("Fact Check Status")
+        st.markdown("## ✅ Fact Check Status")
         st.success(result["fact_check_status"])
 
     else:
