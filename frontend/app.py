@@ -49,8 +49,5 @@ if generate:
         st.subheader("Fact Check Status")
         st.success(result["fact_check_status"])
 
-        st.subheader("Fact Check Status")
-
-        st.success(result["fact_check_status"])
     else:
         st.error("Failed to connect to the FastAPI backend.")
