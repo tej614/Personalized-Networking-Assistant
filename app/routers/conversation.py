@@ -16,6 +16,7 @@ def generate_conversation(request:ConversationRequest):
     event_info=analyze_event(request.event)
     topics=generate_topics(request.event)
     tips = generate_networking_tips(request.user, request.event)
+    intro = generate_self_introduction(request.user, request.event)
     verified=check_facts(topics)
 
     save_history(
@@ -25,8 +26,9 @@ def generate_conversation(request:ConversationRequest):
     )
 
     return ConversationResponse(
-    suggested_topics=verified["verified_topics"],
-    networking_tips=tips,
-    fact_check_status=verified["status"]
-)
+        suggested_topics=verified["verified_topics"],
+        networking_tips=tips,
+        self_introduction=intro,
+        fact_check_status=verified["status"]
+    )
 
