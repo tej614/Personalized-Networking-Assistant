@@ -45,6 +45,11 @@ if generate:
 
         st.subheader("👤 AI Self Introduction")
         st.info(result["self_introduction"])
+        st.subheader("💬 Conversation Starters")
+
+        for starter in result["conversation_starters"]:
+            st.write("•", starter)
+
 
         st.subheader("Fact Check Status")
         st.success(result["fact_check_status"])
