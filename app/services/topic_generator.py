@@ -1,9 +1,20 @@
 from app.models.schemas import Event
+from groq import Groq
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client=Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def generate_topics(event:Event):
-    topics=[
-        f"Latest trends in {event.domain}",
-        f"Career opportunities in {event.domain}",
-        f"Innovations in {event.domain}"
-    ]
-    return topics
+    response=client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role":"user",
+                "content": f"Generate 3 networking conversation topics for an even in {event.domain}. Return each topic on a new line."
+            }
+        ]
+    )
+    print(response)
