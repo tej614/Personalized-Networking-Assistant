@@ -7,6 +7,7 @@ from app.services.fact_checker import check_facts
 from app.services.history_logger import save_history
 from app.services.feedback_logger import save_feedback
 from app.services.networking_tips import generate_networking_tips
+from app.services.self_introduction import generate_self_introduction
 
 router=APIRouter()
 
