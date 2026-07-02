@@ -14,6 +14,7 @@ router=APIRouter()
 def generate_conversation(request:ConversationRequest):
     event_info=analyze_event(request.event)
     topics=generate_topics(request.event)
+    tips = generate_networking_tips(request.user, request.event)
     verified=check_facts(topics)
 
     save_history(
