@@ -17,17 +17,17 @@ def generate_topics(event:Event):
                 Generate exactly 3 short networking topics for an event about {event.domain}.
 
                 Rules:
-                -Each topic should be less then 6 words.
-                -Do not ask questions.
-                -Do not add numbering.
-                -Do not add explanations.
-                -Return one topic per line.
+                - Each topic should be less than 6 words.
+                - Do not ask questions.
+                - Do not add numbering.
+                - Do not add explanations.
+                - Return one topic per line.
                 """
             }
         ]
     )
     content=response.choices[0].message.content
     
-    topics=content.split("\n")
+    topics= [topic.strip() for topic in content.split("\n") if topic.strip()]
 
     return topics
