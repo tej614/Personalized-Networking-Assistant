@@ -24,12 +24,8 @@ def generate_conversation(request:ConversationRequest):
     )
 
     return ConversationResponse(
-        suggested_topics=verified["verified_topics"],
-        networking_tips=[
-            "Introduce yourself confidently.",
-            "Ask open ended questions.",
-            "Exchange contact information.",
-        ],
-        fact_check_status=verified["status"]
-    )
+    suggested_topics=verified["verified_topics"],
+    networking_tips=tips,
+    fact_check_status=verified["status"]
+)
 
