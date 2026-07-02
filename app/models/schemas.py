@@ -19,7 +19,8 @@ class ConversationResponse(BaseModel):
     suggested_topics:List[str]
     networking_tips:List[str]
     self_introduction: str
-    conversation_starters:list[str]
+    conversation_starters: List[str]
+    history: list
     fact_check_status:str
 class Feedback(BaseModel):
     rating:int
