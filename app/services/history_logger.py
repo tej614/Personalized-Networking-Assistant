@@ -27,3 +27,10 @@ def save_history(name, event, topics):
         )
     )
     conn.commit()
+
+
+def get_history():
+    cursor.execute(
+        "SELECT name, event, topics, created_at FROM history ORDER BY id DESC LIMIT 10"
+    )
+    return cursor.fetchall()
