@@ -27,10 +27,11 @@ if generate:
         }
     }
 
-    response=requests.post(
-        "http://127.0.0.1:8000/generate",
-        json=data
-    )
+    with st.spinner("🤖 AI is generating your networking assistant..."):
+        response = requests.post(
+            "http://127.0.0.1:8000/generate",
+            json=data
+        )
 
     if response.status_code ==200:
         result=response.json()
