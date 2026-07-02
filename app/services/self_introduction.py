@@ -1,61 +1,33 @@
-{
-  "suggested_topics": [
-    "AI in Daily Life",
-    "Machine Learning Advances",
-    "Future Tech Trends"
-  ],
-  "networking_tips": [
-    "Bring business cards always.",
-    "Ask about their projects.",
-    "Listen more than speak."
-  ],
-  "fact_check_status": "Verified"
-}
-Response headers
- content-length: 226 
- content-type: application/json 
- date: Thu,02 Jul 2026 16:37:00 GMT 
- server: uvicorn 
-Responses
-Code	Description	Links
-200	
-Successful Response
+from app.models.schemas import User, Event
+from groq import Groq
+import os
+from dotenv import load_dotenv
 
-Media type
+load_dotenv()
 
-application/json
-Controls Accept header.
-Example Value
-Schema
-{
-  "suggested_topics": [
-    "string"
-  ],
-  "networking_tips": [
-    "string"
-  ],
-  "fact_check_status": "string"
-}
-No links
-422	
-Validation Error
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-Media type
+def generate_self_introduction(user: User, event: Event):
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+Generate a professional self introduction.
 
-application/json
-Example Value
-Schema
-{
-  "detail": [
-    {
-      "loc": [
-        "string",
-        0
-      ],
-      "msg": "string",
-      "type": "string",
-      "input": "string",
-      "ctx": {}
-    }
-  ]
-}
+Name: {user.name}
+Profession: {user.profession}
+Interests: {", ".join(user.interests)}
+Event: {event.title}
+
+Rules:
+- Maximum 60 words.
+- Friendly and professional.
+- Ready to speak at a networking event.
+"""
+            }
+        ]
+    )
+
+    return response.choices[0].message.content.strip()
