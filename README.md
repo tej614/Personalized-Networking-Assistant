@@ -280,19 +280,6 @@ The complete project submission contains the following documentation:
 
 ---
 
-# 📸 Screenshots
-
-Include screenshots of:
-
-- Home Page
-- AI Generated Results
-- Swagger Documentation
-- Backend Deployment (Render)
-- Frontend Deployment (Streamlit)
-- Test Results
-
----
-
 # 📈 Future Enhancements
 
 - User Authentication
@@ -311,13 +298,6 @@ Include screenshots of:
 
 B.Tech Computer Science Student
 
-### Skills
-
-- Python
-- FastAPI
-- Streamlit
-- Artificial Intelligence
-- REST API Development
 
 GitHub:
 
