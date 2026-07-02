@@ -294,15 +294,12 @@ The complete project submission contains the following documentation:
 
 # 👥 Authors
 
-This project was developed collaboratively by:
+This project was collaboratively developed by:
 
-| Team Member | Role / Contribution |
-|-------------|---------------------|
-| **Garudappagari Pallavi** (Team Lead) | Project planning, coordination, and overall project management |
-| **Dandu Thanishka Reddy** | Major contributor to development, implementation, and testing |
-| **Gunturi Teja Sekhar Naidu** | Backend development, AI integration, deployment, GitHub management, and documentation |
-| **Chandana Ganuga** | Documentation, testing support, and project assistance |
-
+- **Garudappagari Pallavi** – Team Lead
+- **Dandu Thanishka Reddy** – Project Developer
+- **Chandana Ganuga** – Project Developer
+- **Gunturi Teja Sekhar Naidu** – Project Developer
 
 ---
 
