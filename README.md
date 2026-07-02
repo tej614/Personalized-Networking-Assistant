@@ -94,11 +94,6 @@ python -m pytest
 
 ---
 
-## 📷 Screenshots
-
-(Add screenshots here after deployment.)
-
----
 
 ## 👨‍💻 Author
 
