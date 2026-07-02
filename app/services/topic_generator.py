@@ -13,7 +13,7 @@ def generate_topics(event:Event):
         messages=[
             {
                 "role":"user",
-                "content": f"Generate 3 networking conversation topics for an even in {event.domain}. Return each topic on a new line."
+                "content": f"Generate 3 networking conversation topics for an event in {event.domain}. Return each topic on a new line."
             }
         ]
     )
