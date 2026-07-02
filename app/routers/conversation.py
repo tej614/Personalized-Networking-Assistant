@@ -27,6 +27,11 @@ def generate_conversation(request:ConversationRequest):
         topics
     )
 
+    save_feedback(
+        request.user.name,
+        "Generated successfully"
+    )
+
     return ConversationResponse(
         suggested_topics=verified["verified_topics"],
         networking_tips=tips,
