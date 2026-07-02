@@ -38,6 +38,7 @@ def generate_conversation(request:ConversationRequest):
         networking_tips=tips,
         self_introduction=intro,
         conversation_starters=starters,
+        history=history,
         fact_check_status=verified["status"]
     )
 
