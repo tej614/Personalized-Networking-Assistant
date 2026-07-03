@@ -1,4 +1,4 @@
-import wikipedia
+import requests
 
 wikipedia.set_lang("en")
 
