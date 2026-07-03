@@ -69,8 +69,9 @@ if generate:
 
         with st.expander("🎯 Suggested Topics", expanded=True):
             for topic in result["suggested_topics"]:
-                st.write("•", topic)
-
+                st.markdown(f"### ✅ {topic['topic']}")
+                st.write(f"**Status:** {topic['status']}")
+                st.info(topic["summary"])
         with st.expander("🤝 Networking Tips"):
             for tip in result["networking_tips"]:
                 st.write("•", tip)
