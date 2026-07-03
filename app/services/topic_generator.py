@@ -14,14 +14,32 @@ def generate_topics(event:Event):
             {
                 "role":"user",
                 "content": f"""
-                Generate exactly 3 short networking topics for an event about {event.domain}.
+                Generate exactly 3 networking discussion topics for an event in the {event.domain} domain.
 
                 Rules:
-                - Each topic should be less than 6 words.
+                - Each topic must be 1 to 3 words only.
+                - Each topic should correspond to an existing Wikipedia article.
+                - Use well-known technical concepts, technologies, industries, or research fields.
+                - Avoid phrases like "AI in Business", "Future of AI Systems", "Tech Trends", or "Market Trends".
                 - Do not ask questions.
                 - Do not add numbering.
                 - Do not add explanations.
-                - Return one topic per line.
+                - Return only one topic per line.
+
+                Examples for AI:
+                Artificial Intelligence
+                Machine Learning
+                Robotics
+
+                Examples for Python:
+                Python Programming
+                Data Science
+                Flask
+
+                Examples for Agriculture:
+                Tomato
+                Agriculture
+                Horticulture
                 """
             }
         ]
