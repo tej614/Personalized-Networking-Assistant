@@ -1,7 +1,10 @@
-feedback_data = []
+feedback_history = []
 
-def save_feedback(name, feedback):
-    feedback_data.append({
-        "name": name,
+def save_feedback(user_name: str, feedback: str):
+    feedback_history.append({
+        "user": user_name,
         "feedback": feedback
     })
+
+def get_feedback():
+    return feedback_history

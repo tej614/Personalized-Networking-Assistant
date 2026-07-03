@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.models.schemas import ConversationRequest, ConversationResponse
+from app.models.schemas import ConversationRequest, ConversationResponse,Feedback
 from app.services.event_analyzer import analyze_event
 from app.services.topic_generator import generate_topics
 from app.services.fact_checker import check_facts
@@ -12,7 +12,24 @@ from app.services.conversation_starters import generate_conversation_starters
 
 router=APIRouter()
 
-@router.post("/generate",response_model=ConversationResponse)
+@router.post("/analyze-event")
+def analyze_event_api(request: ConversationRequest):
+    event_info = analyze_event(request.event)
+    return event_info
+
+@router.post("/fact-check")
+def fact_check_api(request: ConversationRequest):
+    topics = generate_topics(request.event)
+    verified = check_facts(topics)
+    return verified
+
+@router.post("/feedback")
+def submit_feedback(request: Feedback):
+    save_feedback(request.user_name, request.feedback)
+    return {"message": "Feedback saved successfully"}
+
+@router.post("/generate-conversation",response_model=ConversationResponse)
+    
 def generate_conversation(request:ConversationRequest):
     event_info=analyze_event(request.event)
     topics=generate_topics(request.event)
@@ -28,10 +45,6 @@ def generate_conversation(request:ConversationRequest):
     )
     history = get_history()
 
-    save_feedback(
-        request.user.name,
-        "Generated successfully"
-    )
 
     return ConversationResponse(
         suggested_topics=verified["verified_topics"],

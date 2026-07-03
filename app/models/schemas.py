@@ -27,6 +27,7 @@ class ConversationResponse(BaseModel):
     conversation_starters: List[str]
     history: list
     fact_check_status:str
+
 class Feedback(BaseModel):
-    rating:int
-    comments:str
+    user_name: str
+    feedback: str
