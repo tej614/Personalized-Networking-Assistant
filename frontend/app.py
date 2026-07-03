@@ -94,7 +94,6 @@ if generate:
                     result = response.json()
 
                     st.success("✅ Networking Plan Generated Successfully!")
-                    st.balloons()
 
                     # -----------------------------
                     # Metrics
