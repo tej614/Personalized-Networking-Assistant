@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from pathlib import Path
 
 # -----------------------------
 # Page Config
@@ -11,15 +12,23 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Header
+# Load CSS
 # -----------------------------
+css_file = Path(__file__).parent / "style.css"
+
+with open(css_file) as f:
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
 st.title("🤖 Personalized Networking Assistant")
-st.markdown(
-    """
-Welcome! Generate AI-powered networking suggestions, conversation starters,
-self introductions and professional networking tips for your next event.
-"""
-)
+st.markdown("""
+### 🚀 Your AI Networking Companion
+
+Generate personalized networking topics, professional introductions,
+conversation starters, networking tips and AI-powered recommendations
+for conferences, seminars, workshops and professional events.
+""")
 
 st.divider()
 
@@ -135,9 +144,24 @@ if generate:
                             else:
                                 icon = "⚠️"
 
-                            st.markdown(f"### {icon} {topic['topic']}")
-                            st.write(f"**Status:** {status}")
-                            st.info(topic["summary"])
+                            st.markdown(f"""
+                            <div style="
+                            background:white;
+                            padding:15px;
+                            border-radius:10px;
+                            border-left:5px solid #2563eb;
+                            margin-bottom:15px;
+                            box-shadow:0px 2px 8px rgba(0,0,0,.08);
+                            ">
+
+                            <h4>{icon} {topic['topic']}</h4>
+
+                            <b>Status:</b> {status}<br><br>
+
+                            {topic["summary"]}
+
+                            </div>
+                            """, unsafe_allow_html=True)
 
                     # -----------------------------
                     # Tips
@@ -146,7 +170,7 @@ if generate:
                     with st.expander("🤝 Networking Tips"):
 
                         for tip in result["networking_tips"]:
-                            st.markdown(f"✅ {tip}")
+                            st.success(tip)
 
                     # -----------------------------
                     # Self Introduction
@@ -163,7 +187,7 @@ if generate:
                     with st.expander("💬 Conversation Starters"):
 
                         for starter in result["conversation_starters"]:
-                            st.markdown(f"➡️ {starter}")
+                            st.info(starter)
 
                     # -----------------------------
                     # History
@@ -175,17 +199,21 @@ if generate:
 
                             for item in result["history"]:
 
-                                st.markdown(
-                                    f"""
-**👤 User:** {item[0]}
+                                st.markdown(f"""
+                                <div style="
+                                background:white;
+                                padding:15px;
+                                border-radius:10px;
+                                border-left:4px solid #2563eb;
+                                margin-bottom:10px;
+                                ">
 
-**🎯 Event:** {item[1]}
+                                👤 <b>{item[0]}</b><br>
+                                🎯 {item[1]}<br>
+                                📅 {item[3]}
 
-**📅 Date:** {item[3]}
-
----
-"""
-                                )
+                                </div>
+                                """, unsafe_allow_html=True)
 
                         else:
                             st.info("No previous history found.")
@@ -227,15 +255,12 @@ if generate:
 # -----------------------------
 st.divider()
 
-st.markdown(
-    """
-<center>
+st.markdown("""
+<div style="text-align:center;color:gray">
 
-Developed using ❤️
+### 🤖 Personalized Networking Assistant
 
-**FastAPI • Streamlit • Groq AI • SQLite**
+Powered by **FastAPI • Groq AI • Streamlit • SQLite**
 
-</center>
-""",
-    unsafe_allow_html=True
-)
+</div>
+""", unsafe_allow_html=True)
