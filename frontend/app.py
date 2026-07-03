@@ -1,9 +1,13 @@
 import streamlit as st
 import requests
-from pathlib import Path
 
 # -----------------------------
-# Page Config
+# Backend URL
+# -----------------------------
+BASE_URL = "http://127.0.0.1:8000"
+
+# -----------------------------
+# Page Configuration
 # -----------------------------
 st.set_page_config(
     page_title="Personalized Networking Assistant",
@@ -11,75 +15,68 @@ st.set_page_config(
     layout="wide"
 )
 
-# -----------------------------
-# Load CSS
-# -----------------------------
-css_file = Path(__file__).parent / "style.css"
-
-with open(css_file) as f:
-    st.markdown(
-        f"<style>{f.read()}</style>",
-        unsafe_allow_html=True
-    )
-st.title("🤖 Personalized Networking Assistant")
-st.markdown("""
-### 🚀 Your AI Networking Companion
-
-Generate personalized networking topics, professional introductions,
-conversation starters, networking tips and AI-powered recommendations
-for conferences, seminars, workshops and professional events.
-""")
-
-st.divider()
+st.title("Personalized Networking Assistant")
+st.write("Generate personalized networking suggestions for professional events.")
 
 # -----------------------------
-# Sidebar
+# Session State
 # -----------------------------
-with st.sidebar:
+if "result" not in st.session_state:
+    st.session_state.result = None
 
-    st.title("⚙️ Input Details")
+if "history" not in st.session_state:
+    st.session_state.history = []
 
-    st.subheader("👤 User Information")
-
-    name = st.text_input("Name")
-    profession = st.text_input("Profession")
-    interests = st.text_input("Interests (comma separated)")
-
-    st.divider()
-
-    st.subheader("📅 Event Information")
-
-    event_title = st.text_input("Event Title")
-    domain = st.text_input("Domain")
-    location = st.text_input("Location")
-
-    st.divider()
-
-    generate = st.button(
-        "🚀 Generate Networking Plan",
-        use_container_width=True
-    )
+if "feedback_history" not in st.session_state:
+    st.session_state.feedback_history = []
 
 # -----------------------------
-# Generate
+# User Information
+# -----------------------------
+st.header("👤 User Information")
+
+name = st.text_input("Name")
+profession = st.text_input("Profession")
+interests_input = st.text_input(
+    "Interests (comma separated)",
+    placeholder="AI, Machine Learning, Python"
+)
+
+# -----------------------------
+# Event Information
+# -----------------------------
+st.header("📅 Event Information")
+
+event_title = st.text_input("Event Title")
+domain = st.text_input("Domain")
+location = st.text_input("Location")
+
+# -----------------------------
+# Generate Button
+# -----------------------------
+generate = st.button("Generate Conversation")
+
+# -----------------------------
+# Generate Conversation
 # -----------------------------
 if generate:
 
-    if not name or not profession or not event_title or not domain:
-
-        st.warning("⚠️ Please fill all required fields.")
+    if not all([name, profession, event_title, domain]):
+        st.warning("Please fill in all required fields.")
 
     else:
+
+        interests = [
+            i.strip()
+            for i in interests_input.split(",")
+            if i.strip()
+        ]
 
         data = {
             "user": {
                 "name": name,
                 "profession": profession,
-                "interests": [
-                    i.strip()
-                    for i in interests.split(",")
-                    if i.strip()
-                ]
+                "interests": interests
             },
             "event": {
                 "title": event_title,
@@ -88,179 +85,138 @@ if generate:
             }
         }
 
-        with st.spinner("🤖 AI is preparing your networking assistant..."):
+        with st.spinner("Generating conversation suggestions..."):
 
             try:
 
                 response = requests.post(
-                    "https://personalized-networking-assistant-9p63.onrender.com/generate",
-                    json=data,
-                    timeout=60
+                    f"{BASE_URL}/generate-conversation",
+                    json=data
                 )
 
                 if response.status_code == 200:
 
-                    result = response.json()
+                    st.session_state.result = response.json()
 
-                    st.success("✅ Networking Plan Generated Successfully!")
-
-                    # -----------------------------
-                    # Metrics
-                    # -----------------------------
-
-                    c1, c2, c3 = st.columns(3)
-
-                    c1.metric(
-                        "🎯 Topics",
-                        len(result["suggested_topics"])
-                    )
-
-                    c2.metric(
-                        "🤝 Tips",
-                        len(result["networking_tips"])
-                    )
-
-                    c3.metric(
-                        "💬 Starters",
-                        len(result["conversation_starters"])
-                    )
-
-                    st.divider()
-
-                    # -----------------------------
-                    # Topics
-                    # -----------------------------
-
-                    with st.expander("🎯 Suggested Networking Topics", expanded=True):
-
-                        for topic in result["suggested_topics"]:
-
-                            status = topic["status"]
-
-                            if status == "Verified":
-                                icon = "✅"
-                            elif status == "Not Found":
-                                icon = "❌"
-                            else:
-                                icon = "⚠️"
-
-                            st.markdown(f"""
-                            <div style="
-                            background:white;
-                            padding:15px;
-                            border-radius:10px;
-                            border-left:5px solid #2563eb;
-                            margin-bottom:15px;
-                            box-shadow:0px 2px 8px rgba(0,0,0,.08);
-                            ">
-
-                            <h4>{icon} {topic['topic']}</h4>
-
-                            <b>Status:</b> {status}<br><br>
-
-                            {topic["summary"]}
-
-                            </div>
-                            """, unsafe_allow_html=True)
-
-                    # -----------------------------
-                    # Tips
-                    # -----------------------------
-
-                    with st.expander("🤝 Networking Tips"):
-
-                        for tip in result["networking_tips"]:
-                            st.success(tip)
-
-                    # -----------------------------
-                    # Self Introduction
-                    # -----------------------------
-
-                    with st.expander("👤 AI Self Introduction"):
-
-                        st.success(result["self_introduction"])
-
-                    # -----------------------------
-                    # Conversation Starters
-                    # -----------------------------
-
-                    with st.expander("💬 Conversation Starters"):
-
-                        for starter in result["conversation_starters"]:
-                            st.info(starter)
-
-                    # -----------------------------
-                    # History
-                    # -----------------------------
-
-                    with st.expander("📜 Recent History"):
-
-                        if result["history"]:
-
-                            for item in result["history"]:
-
-                                st.markdown(f"""
-                                <div style="
-                                background:white;
-                                padding:15px;
-                                border-radius:10px;
-                                border-left:4px solid #2563eb;
-                                margin-bottom:10px;
-                                ">
-
-                                👤 <b>{item[0]}</b><br>
-                                🎯 {item[1]}<br>
-                                📅 {item[3]}
-
-                                </div>
-                                """, unsafe_allow_html=True)
-
-                        else:
-                            st.info("No previous history found.")
-
-                    # -----------------------------
-                    # Fact Check
-                    # -----------------------------
-
-                    if result["fact_check_status"] == "Completed":
-
-                        st.success(
-                            "✅ AI Validation Completed Successfully"
-                        )
-
-                    else:
-
-                        st.warning(
-                            result["fact_check_status"]
-                        )
+                    st.success("Conversation generated successfully!")
 
                 else:
 
-                    st.error(
-                        "❌ Backend returned an unexpected response."
-                    )
-
-            except requests.exceptions.ConnectionError:
-
-                st.error(
-                    "❌ Unable to connect to the backend server."
-                )
+                    st.error("Backend returned an error.")
 
             except Exception as e:
 
-                st.error(str(e))
+                st.error(f"Error: {e}")
 
 # -----------------------------
-# Footer
+# Display Results
 # -----------------------------
-st.divider()
+if st.session_state.result:
 
-st.markdown("""
-<div style="text-align:center;color:gray">
+    result = st.session_state.result
 
-### 🤖 Personalized Networking Assistant
+    st.header("🎯 Suggested Topics")
 
-Powered by **FastAPI • Groq AI • Streamlit • SQLite**
+    for topic in result["suggested_topics"]:
+        st.write(f"**Topic:** {topic['topic']}")
+        st.write(f"Status: {topic['status']}")
+        st.write(f"Summary: {topic['summary']}")
+        st.divider()
 
-</div>
-""", unsafe_allow_html=True)
+    st.header("🤝 Networking Tips")
+
+    for tip in result["networking_tips"]:
+        st.write(f"• {tip}")
+
+    st.header("👋 Self Introduction")
+
+    st.write(result["self_introduction"])
+
+    st.header("💬 Conversation Starters")
+
+    for starter in result["conversation_starters"]:
+        st.write(f"• {starter}")
+
+    st.header("📜 Conversation History")
+
+    if result["history"]:
+
+        history = result["history"][-5:]
+
+        for item in reversed(history):
+
+            st.subheader(f"👤 {item[0]}")
+            st.write(f"**📅 Event:** {item[1]}")
+
+            st.write("**🎯 Topics:**")
+            for topic in item[2].split(","):
+                st.write(f"- {topic.strip()}")
+
+            st.caption(f"🕒 {item[3]}")
+            st.divider()
+
+    else:
+        st.info("No conversation history available.")
+
+    st.header("✅ Fact Check Status")
+
+    st.success(result["fact_check_status"])
+
+# -----------------------------
+# Feedback
+# -----------------------------
+st.header("👍 Feedback")
+
+col1, col2 = st.columns(2)
+
+if col1.button("👍 Good"):
+
+    response = requests.post(
+        f"{BASE_URL}/feedback",
+        json={
+            "user_name": name,
+            "feedback": "Good"
+        }
+    )
+
+    if response.status_code == 200:
+        st.success("Thank you for your feedback!")
+
+if col2.button("👎 Bad"):
+
+    response = requests.post(
+        f"{BASE_URL}/feedback",
+        json={
+            "user_name": name,
+            "feedback": "Bad"
+        }
+    )
+
+    if response.status_code == 200:
+        st.success("Thank you for your feedback!")
+
+# -----------------------------
+# Feedback History
+# -----------------------------
+st.header("📝 Feedback History")
+
+try:
+    response = requests.get(f"{BASE_URL}/feedback-history")
+
+    if response.status_code == 200:
+
+        feedbacks = response.json()
+
+        if feedbacks:
+
+            for item in reversed(feedbacks[-10:]):
+
+                icon = "👍" if item["feedback"] == "Good" else "👎"
+
+                st.write(f"{icon} {item['user']} - {item['feedback']}")
+
+        else:
+            st.info("No feedback history available.")
+
+except Exception as e:
+    st.error(f"Unable to load feedback history: {e}")

@@ -5,7 +5,7 @@ from app.services.event_analyzer import analyze_event
 from app.services.topic_generator import generate_topics
 from app.services.fact_checker import check_facts
 from app.services.history_logger import save_history,get_history
-from app.services.feedback_logger import save_feedback
+from app.services.feedback_logger import save_feedback, get_feedback
 from app.services.networking_tips import generate_networking_tips
 from app.services.self_introduction import generate_self_introduction
 from app.services.conversation_starters import generate_conversation_starters
@@ -27,6 +27,10 @@ def fact_check_api(request: ConversationRequest):
 def submit_feedback(request: Feedback):
     save_feedback(request.user_name, request.feedback)
     return {"message": "Feedback saved successfully"}
+
+@router.get("/feedback-history")
+def feedback_history():
+    return get_feedback()
 
 @router.post("/generate-conversation",response_model=ConversationResponse)
     
