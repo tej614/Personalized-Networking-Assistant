@@ -29,11 +29,11 @@ def check_facts(topics):
                 "summary": "Multiple Wikipedia articles match this topic."
             })
 
-        except Exception:
+        except Exception as e:
             verified_topics.append({
                 "topic": topic,
                 "status": "Verification Failed",
-                "summary": "Unable to verify this topic."
+                "summary": str(e)
             })
 
     return {
