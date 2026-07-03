@@ -1,0 +1,52 @@
+/* Main App */
+.stApp{
+    background:#f5f7fb;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"]{
+    background:#0f172a;
+}
+
+[data-testid="stSidebar"] *{
+    color:white;
+}
+
+/* Buttons */
+.stButton > button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    height:45px;
+    transition:0.3s;
+}
+
+.stButton > button:hover{
+    background:#1d4ed8;
+}
+
+/* Metrics */
+[data-testid="metric-container"]{
+    background:white;
+    border-radius:15px;
+    padding:15px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+/* Expanders */
+div[data-testid="stExpander"]{
+    border:1px solid #dbeafe;
+    border-radius:12px;
+}
+
+/* Success */
+.stSuccess{
+    border-radius:10px;
+}
+
+/* Info */
+.stInfo{
+    border-radius:10px;
+}
