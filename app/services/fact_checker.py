@@ -1,70 +1,43 @@
-import requests
-from urllib.parse import quote
+import wikipedia
 
-HEADERS = {
-    "User-Agent": "PersonalizedNetworkingAssistant/1.0"
-}
+wikipedia.set_lang("en")
 
 def check_facts(topics):
     verified_topics = []
 
     for topic in topics:
         try:
-            search_url = "https://en.wikipedia.org/w/api.php"
+            summary = wikipedia.summary(topic, sentences=1)
 
-            params = {
-                "action": "query",
-                "list": "search",
-                "srsearch": topic,
-                "format": "json"
-            }
+            verified_topics.append({
+                "topic": topic,
+                "status": "Verified",
+                "summary": summary
+            })
 
-            response = requests.get(
-                search_url,
-                params=params,
-                headers=HEADERS,
-                timeout=10
-            )
-
-            response.raise_for_status()
-
-            data = response.json()
-
-            results = data.get("query", {}).get("search", [])
-
-            if not results:
-                verified_topics.append({
-                    "topic": topic,
-                    "status": "Not Found",
-                    "summary": "No Wikipedia article found."
-                })
-                continue
-
-            title = quote(results[0]["title"])
-
-            summary_response = requests.get(
-                f"https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
-                headers=HEADERS,
-                timeout=10
-            )
-
-            if summary_response.status_code == 200:
-                summary_data = summary_response.json()
+        except wikipedia.exceptions.DisambiguationError as e:
+            try:
+                summary = wikipedia.summary(e.options[0], sentences=1)
 
                 verified_topics.append({
                     "topic": topic,
-                    "status": "Verified",
-                    "summary": summary_data.get(
-                        "extract",
-                        "Summary not available."
-                    )
+                    "status": "Verified (Closest Match)",
+                    "summary": summary
                 })
-            else:
+
+            except Exception:
                 verified_topics.append({
                     "topic": topic,
-                    "status": "Verified",
-                    "summary": "Wikipedia page found."
+                    "status": "Multiple Results",
+                    "summary": "Multiple Wikipedia articles match this topic."
                 })
+
+        except wikipedia.exceptions.PageError:
+            verified_topics.append({
+                "topic": topic,
+                "status": "Not Found",
+                "summary": "No Wikipedia article found."
+            })
 
         except Exception as e:
             verified_topics.append({
